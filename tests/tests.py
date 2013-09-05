@@ -1,4 +1,5 @@
 import os
+import random
 import xmlrpclib
 import unittest
 import test_data
@@ -36,9 +37,14 @@ class RemoteClassTestCase(unittest.TestCase):
 
 class RealServerTestCase(unittest.TestCase):
     def setUp(self):
-        self.server_thread = start_server(TEST_DATA, log_requests=False)
+        port = random.randint(2000, 8000)
+        self.server_thread = start_server(
+            TEST_DATA,
+            port=port,
+            log_requests=False
+        )
         self.proxy = xmlrpclib.ServerProxy(
-            "http://127.0.0.1:8000/",
+            "http://127.0.0.1:%d/" % (port),
             allow_none=True
         )
         self.remote = lambda name: RemoteClass(self.proxy, name)
