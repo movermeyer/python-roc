@@ -4,16 +4,9 @@ import threading
 from SimpleXMLRPCServer import SimpleXMLRPCServer
 
 
-def main():
-    # print import_classes()
-    server = create_server()
-    print "Listening on port 8000..."
-    server.serve_forever()
-
-
-def start_server(logRequests=True):
+def start_server(port=8000, logRequests=True):
     def serve_forever_or_die_trying():
-        server = create_server(logRequests)
+        server = create_server(port=port, logRequests=logRequests)
         server.serve_forever()
         server.shutdown()  # break request_handle loop
         server.server_close()  # close socket
@@ -24,13 +17,13 @@ def start_server(logRequests=True):
     return thread
 
 
-def create_server(logRequests=True):
-    return RocServer(logRequests).server
+def create_server(port=8000, logRequests=True):
+    return RocServer(port, logRequests).server
 
 
 class RocServer(object):
-    def __init__(self, logRequests=True):
-        self.server = SimpleXMLRPCServer(("127.0.0.1", 8000),
+    def __init__(self, port, logRequests=True):
+        self.server = SimpleXMLRPCServer(("127.0.0.1", port),
                                          allow_none=True,
                                          logRequests=logRequests)
         self.available_classes = import_classes()
@@ -86,7 +79,3 @@ def import_modules(package_path='fixtures'):
                 yield module
         else:
             yield loader.find_module(name).load_module(name)
-
-
-if __name__ == '__main__':
-    main()
