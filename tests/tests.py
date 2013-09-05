@@ -13,9 +13,7 @@ except ImportError:
 from server import start_server, import_classes, import_modules
 
 
-print test_data.__file__
-TEST_DATA = os.path.abspath(os.path.join(os.path.dirname(__file__),
-                                         'test_data'))
+TEST_DATA = os.path.dirname(test_data.__file__)
 
 
 class PowFixtureTestCase(unittest.TestCase):
