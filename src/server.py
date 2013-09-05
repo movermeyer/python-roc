@@ -5,12 +5,13 @@ from SimpleXMLRPCServer import SimpleXMLRPCServer
 
 
 def start_server(package_path, port=8000, log_requests=True):
+    server = create_server(
+        package_path,
+        port=port,
+        logRequests=log_requests,
+    )
+
     def serve_forever_or_die_trying():
-        server = create_server(
-            package_path,
-            port=port,
-            logRequests=log_requests,
-        )
         server.serve_forever()
         server.shutdown()  # break request_handle loop
         server.server_close()  # close socket
