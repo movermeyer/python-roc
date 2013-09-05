@@ -1,6 +1,6 @@
 import xmlrpclib
 import unittest
-from pow_fixture import PowFixture
+from fixtures.pow_fixture import PowFixture
 from remote_class import RemoteClass
 from server import start_server, import_classes, import_modules
 
