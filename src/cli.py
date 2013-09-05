@@ -10,4 +10,6 @@ def main():
                       action="store_false", dest="verbose", default=True,
                       help="don't print log messages to stdout")
     (options, args) = parser.parse_args()
+    if options.verbose:
+        print "Listening on port %d..." % (options.port)
     create_server(options.port, options.verbose).serve_forever()
