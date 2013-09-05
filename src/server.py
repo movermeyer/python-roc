@@ -4,9 +4,13 @@ import threading
 from SimpleXMLRPCServer import SimpleXMLRPCServer
 
 
-def start_server(port=8000, logRequests=True):
+def start_server(package_path, port=8000, log_requests=True):
     def serve_forever_or_die_trying():
-        server = create_server(port=port, logRequests=logRequests)
+        server = create_server(
+            package_path,
+            port=port,
+            logRequests=log_requests,
+        )
         server.serve_forever()
         server.shutdown()  # break request_handle loop
         server.server_close()  # close socket
@@ -17,16 +21,16 @@ def start_server(port=8000, logRequests=True):
     return thread
 
 
-def create_server(port=8000, logRequests=True):
-    return RocServer(port, logRequests).server
+def create_server(package_path, port=8000, logRequests=True):
+    return RocServer(package_path, port, logRequests).server
 
 
 class RocServer(object):
-    def __init__(self, port, logRequests=True):
+    def __init__(self, package_path, port, logRequests=True):
         self.server = SimpleXMLRPCServer(("127.0.0.1", port),
                                          allow_none=True,
                                          logRequests=logRequests)
-        self.available_classes = import_classes()
+        self.available_classes = import_classes(package_path)
         self.existing_instances = collections.defaultdict(lambda: [])
         self.server.register_introspection_functions()
         self.server.register_instance(self)
@@ -54,7 +58,7 @@ class RocServer(object):
         return instance_name
 
 
-def import_classes(package_path='fixtures'):
+def import_classes(package_path):
     from inspect import getmembers, isclass, ismethod
     classes = {}
     for module in import_modules(package_path):
@@ -69,7 +73,7 @@ def import_classes(package_path='fixtures'):
     return classes
 
 
-def import_modules(package_path='fixtures'):
+def import_modules(package_path):
     import os
     import pkgutil
     for loader, name, is_pkg in pkgutil.walk_packages([package_path]):
