@@ -1,8 +1,21 @@
+import os
 import xmlrpclib
 import unittest
-from fixtures.pow_fixture import PowFixture
-from remote_class import RemoteClass
+import test_data
+from test_data.pow_fixture import PowFixture
+try:
+    from remote_class import RemoteClass
+except ImportError:
+    import sys
+    sys.path.append('src')
+    sys.path.append(os.path.join('..', 'src'))
+    from remote_class import RemoteClass
 from server import start_server, import_classes, import_modules
+
+
+print test_data.__file__
+TEST_DATA = os.path.abspath(os.path.join(os.path.dirname(__file__),
+                                         'test_data'))
 
 
 class PowFixtureTestCase(unittest.TestCase):
@@ -25,7 +38,7 @@ class RemoteClassTestCase(unittest.TestCase):
 
 class RealServerTestCase(unittest.TestCase):
     def setUp(self):
-        self.server_thread = start_server(logRequests=False)
+        self.server_thread = start_server(TEST_DATA, log_requests=False)
         self.proxy = xmlrpclib.ServerProxy(
             "http://127.0.0.1:8000/",
             allow_none=True
@@ -60,11 +73,11 @@ class RealServerTestCase(unittest.TestCase):
 
 class InspectionTestCase(unittest.TestCase):
     def test_import_modules_founds_submodules(self):
-        modules = [m.__name__ for m in import_modules()]
+        modules = [m.__name__ for m in import_modules(TEST_DATA)]
         self.assertEqual(modules, ['pow_fixture', 'div_fixture'])
 
     def test_import_classes_founds_submodules(self):
-        classes = import_classes()
+        classes = import_classes(TEST_DATA)
         self.assertEqual(sorted(classes.keys()),
                          ['DivFixture', 'PowFixture'])
 
