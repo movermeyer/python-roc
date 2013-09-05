@@ -1,7 +1,12 @@
 import itertools
 import collections
 import threading
-from SimpleXMLRPCServer import SimpleXMLRPCServer
+import six
+
+if six.PY2:
+    from SimpleXMLRPCServer import SimpleXMLRPCServer
+elif six.PY3:
+    from xmlrpc.server import SimpleXMLRPCServer
 
 
 def start_server(package_path, port=8000, log_requests=True):
@@ -40,7 +45,7 @@ class RocServer(object):
         threading.Thread(target=self.server.shutdown).start()
 
     def classes(self):
-        return self.available_classes.keys()
+        return list(self.available_classes.keys())
 
     def instances(self):
         return list(itertools.chain(*self.existing_instances.values()))

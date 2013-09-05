@@ -1,9 +1,13 @@
 import os
 import random
-import xmlrpclib
 import unittest
-import test_data
-from test_data.pow_fixture import PowFixture
+import six
+if six.PY2:
+    from xmlrpclib import ServerProxy
+elif six.PY3:
+    from xmlrpc.client import ServerProxy
+from . import test_data
+from .test_data.pow_fixture import PowFixture
 try:
     from remote_class import RemoteClass
 except ImportError:
@@ -43,7 +47,7 @@ class RealServerTestCase(unittest.TestCase):
             port=port,
             log_requests=False
         )
-        self.proxy = xmlrpclib.ServerProxy(
+        self.proxy = ServerProxy(
             "http://127.0.0.1:%d/" % (port),
             allow_none=True
         )

@@ -12,5 +12,6 @@ setup(
     test_suite='tests.tests',
     install_requires=(
          'setuptools>=0.6b1',
+         'six',
     ),
 )
