@@ -2,12 +2,12 @@ import os
 import random
 import unittest
 import six
+import test_data
+import test_data.pow_fixture
 if six.PY2:
     from xmlrpclib import ServerProxy
 elif six.PY3:
     from xmlrpc.client import ServerProxy
-from . import test_data
-from .test_data.pow_fixture import PowFixture
 try:
     from remote_class import RemoteClass
 except ImportError:
@@ -15,28 +15,10 @@ except ImportError:
     sys.path.append('src')
     sys.path.append(os.path.join('..', 'src'))
     from remote_class import RemoteClass
-from server import start_server, import_classes, import_modules
+from server import start_server
 
 
 TEST_DATA = os.path.dirname(test_data.__file__)
-
-
-class PowFixtureTestCase(unittest.TestCase):
-    def test_3_in_power_of_2_is_9(self):
-        self.assertEqual(PowFixture(3).pow(2), 9)
-
-
-class RemoteClassTestCase(unittest.TestCase):
-    class ServerMock(object):
-        def create(self, class_name, args):
-            instance_name = class_name + '0'
-            setattr(self, instance_name,
-                    globals()[class_name](*args))
-            return instance_name
-
-    def test_remote_power(self):
-        PowFixture = RemoteClass(self.ServerMock(), 'PowFixture')
-        self.assertEqual(PowFixture(3).pow(2), 9)
 
 
 class RealServerTestCase(unittest.TestCase):
@@ -85,17 +67,6 @@ class RealServerTestCase(unittest.TestCase):
     def tearDown(self):
         self.proxy.shutdown()
         self.server_thread.join()
-
-
-class InspectionTestCase(unittest.TestCase):
-    def test_import_modules_founds_submodules(self):
-        modules = [m.__name__ for m in import_modules(TEST_DATA)]
-        self.assertEqual(modules, ['pow_fixture', 'div_fixture'])
-
-    def test_import_classes_founds_methods(self):
-        classes = import_classes(TEST_DATA)
-        self.assertEqual(sorted(classes['PowFixture']['methods']),
-                         ['pow'])
 
 
 if __name__ == '__main__':
