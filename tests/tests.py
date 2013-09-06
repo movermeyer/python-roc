@@ -51,7 +51,6 @@ class RealServerTestCase(unittest.TestCase):
             "http://127.0.0.1:%d/" % (port),
             allow_none=True
         )
-        self.remote = lambda name: RemoteClass(self.proxy, name)
 
     def test_whats_registered(self):
         must_be_provided = ('classes', 'create', 'instances', 'shutdown')
@@ -59,9 +58,18 @@ class RealServerTestCase(unittest.TestCase):
         self.assertTrue(all([method in provided_methods
                              for method in must_be_provided]))
 
-    def test_remote_power(self):
-        PowFixture = self.remote('PowFixture')
-        self.assertEqual(PowFixture(3).pow(2), 9)
+    def test_create_adds_methods(self):
+        provided_0 = set(self.proxy.system.listMethods())
+        self.proxy.create('PowFixture', [7])
+        provided_1 = set(self.proxy.system.listMethods())
+        self.assertFalse(provided_0 == provided_1,
+                         ".create() does not add new methods to server")
+
+    def test_remote_class_with_real_server(self):
+        PowFixture = RemoteClass(self.proxy, 'PowFixture')
+        pow_3 = PowFixture(3)
+        nine = pow_3.pow(2)
+        self.assertEqual(nine, 9)
 
     def test_server_instances(self):
         self.assertEqual(self.proxy.instances(), [])
@@ -84,10 +92,10 @@ class InspectionTestCase(unittest.TestCase):
         modules = [m.__name__ for m in import_modules(TEST_DATA)]
         self.assertEqual(modules, ['pow_fixture', 'div_fixture'])
 
-    def test_import_classes_founds_submodules(self):
+    def test_import_classes_founds_methods(self):
         classes = import_classes(TEST_DATA)
-        self.assertEqual(sorted(classes.keys()),
-                         ['DivFixture', 'PowFixture'])
+        self.assertEqual(sorted(classes['PowFixture']['methods']),
+                         ['pow'])
 
 
 if __name__ == '__main__':

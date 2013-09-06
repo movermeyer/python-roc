@@ -65,12 +65,16 @@ class RocServer(object):
 
 
 def import_classes(package_path):
-    from inspect import getmembers, isclass, ismethod
+    import inspect
+    if six.PY2:
+        isfunction = inspect.ismethod
+    elif six.PY3:
+        isfunction = inspect.isfunction
     classes = {}
     for module in import_modules(package_path):
-        for class_name, Class in getmembers(module, isclass):
+        for class_name, Class in inspect.getmembers(module, inspect.isclass):
             methods = [n
-                       for n, _ in getmembers(Class, ismethod)
+                       for n, _ in inspect.getmembers(Class, isfunction)
                        if '__' not in n]
             classes[class_name] = {
                 'class': Class,
