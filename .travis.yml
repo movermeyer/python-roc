@@ -7,4 +7,4 @@ python:
 # command to install dependencies
 install: pip install setuptools six
 # command to run tests
-script: python setup.py test
+script: python tests/alltests.py

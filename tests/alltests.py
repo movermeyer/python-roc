@@ -1,0 +1,74 @@
+import os
+import sys
+import shutil
+import hashlib
+import unittest
+import subprocess
+from six.moves.urllib import request
+import sanity_tests
+import client_tests
+import server_tests
+import complex_tests
+
+
+def main():
+    suite = unittest.TestSuite([
+        unittest.defaultTestLoader.loadTestsFromModule(sanity_tests),
+        unittest.defaultTestLoader.loadTestsFromModule(client_tests),
+        unittest.defaultTestLoader.loadTestsFromModule(server_tests),
+        unittest.defaultTestLoader.loadTestsFromModule(complex_tests),
+    ])
+    result = unittest.TextTestRunner().run(suite)
+    if result.wasSuccessful():
+        return 0
+    else:
+        return 1
+
+
+def run_fitnesse():
+    '''
+    Locally you can run fitnesse server using command:
+    java -jar fitnesse-standalone.jar -e 0 -p 9123
+    '''
+    here = os.path.dirname(__file__)
+    suite_name = 'RocSuite'
+    subprocess.call([
+        'java',
+        '-jar',
+        'fitnesse-standalone.jar',
+        '-i',
+    ], cwd=os.path.dirname(__file__))
+    try:
+        shutil.copytree(os.path.join(here, suite_name),
+                        os.path.join('FitNesseRoot', suite_name))
+    except IOError:
+        pass
+    return subprocess.call([
+        'java',
+        '-jar',
+        'fitnesse-standalone.jar',
+        '-c',
+        'RocSuite?suite&format=text'
+    ], cwd=here)
+
+
+def download_fitnesse():
+    fitnesse_url = ('http://fitnesse.org/fitnesse-standalone.jar' +
+                    '?responder=releaseDownload&release=20130530')
+    fitnesse_path = 'fitnesse-standalone.jar'
+    expected_md5 = 'c357d8717434947ed4dbbf8de51a8016'
+    if os.path.exists(fitnesse_path):
+        with open(fitnesse_path, 'rb') as fp:
+            digest = hashlib.md5(fp.read()).hexdigest()
+        if digest == expected_md5:
+            return
+        else:
+            print('Warning: md5 digest does not match:')
+            print(digest, expected_md5)
+    response = request.urlopen(fitnesse_url)
+    with open(fitnesse_path, 'wb') as out_file:
+        out_file.write(response.read())
+
+
+if __name__ == '__main__':
+    sys.exit(main())
