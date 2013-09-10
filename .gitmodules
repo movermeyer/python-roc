@@ -1,0 +1,3 @@
+[submodule "waferslim"]
+	path = tests/waferslim
+	url = https://github.com/peterdemin/waferslim.git
