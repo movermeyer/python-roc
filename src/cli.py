@@ -4,13 +4,13 @@ def main():
 
     parser = OptionParser()
     parser.add_option("-p", "--port", type="int", help="Server port")
-    parser.add_option("-d", "--folder", default='.',
-                      help="Package directory path")
+    parser.add_option("-m", "--module", default='.',
+                      help="Module path")
     parser.add_option("-q", "--quiet",
                       action="store_false", dest="verbose", default=True,
                       help="don't print log messages to stdout")
     (options, args) = parser.parse_args()
     if options.verbose:
         print("Listening on port %d..." % (options.port))
-    server = create_server(options.folder, options.port, options.verbose)
+    server = create_server(options.module, options.port, options.verbose)
     server.serve_forever()
