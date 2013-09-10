@@ -68,10 +68,10 @@ def load_classes(package_path):
     import os
     classes = {}
     if os.path.isfile(package_path):
-        classes.update(load_module(load_source(package_path)))
+        classes.update(get_classes(load_source(package_path)))
     else:
         for module in load_package(package_path):
-            classes.update(load_module(module))
+            classes.update(get_classes(module))
     return classes
 
 
@@ -94,7 +94,7 @@ def load_package(package_path):
             yield loader.find_module(name).load_module(name)
 
 
-def load_module(module):
+def get_classes(module):
     import inspect
     if six.PY2:
         isfunction = inspect.ismethod
