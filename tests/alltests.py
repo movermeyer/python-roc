@@ -11,6 +11,9 @@ import server_tests
 import complex_tests
 
 
+here = os.path.dirname(__file__)
+
+
 def main():
     suite = unittest.TestSuite([
         unittest.defaultTestLoader.loadTestsFromModule(sanity_tests),
@@ -20,9 +23,9 @@ def main():
     ])
     result = unittest.TextTestRunner().run(suite)
     if result.wasSuccessful():
-        return 0
-    else:
-        return 1
+        download_fitnesse()
+        return run_fitnesse()
+    return 1
 
 
 def run_fitnesse():
@@ -30,7 +33,6 @@ def run_fitnesse():
     Locally you can run fitnesse server using command:
     java -jar fitnesse-standalone.jar -e 0 -p 9123
     '''
-    here = os.path.dirname(__file__)
     suite_name = 'RocSuite'
     subprocess.call([
         'java',
@@ -40,22 +42,18 @@ def run_fitnesse():
     ], cwd=os.path.dirname(__file__))
     try:
         shutil.copytree(os.path.join(here, suite_name),
-                        os.path.join('FitNesseRoot', suite_name))
-    except IOError:
+                        os.path.join(here, 'FitNesseRoot', suite_name))
+    except OSError:
         pass
-    return subprocess.call([
-        'java',
-        '-jar',
-        'fitnesse-standalone.jar',
-        '-c',
-        'RocSuite?suite&format=text'
-    ], cwd=here)
+    return subprocess.call(['java', '-jar', 'fitnesse-standalone.jar',
+                           '-c', 'RocSuite?suite&format=text'],
+                           cwd=here)
 
 
 def download_fitnesse():
     fitnesse_url = ('http://fitnesse.org/fitnesse-standalone.jar' +
                     '?responder=releaseDownload&release=20130530')
-    fitnesse_path = 'fitnesse-standalone.jar'
+    fitnesse_path = os.path.join(here, 'fitnesse-standalone.jar')
     expected_md5 = 'c357d8717434947ed4dbbf8de51a8016'
     if os.path.exists(fitnesse_path):
         with open(fitnesse_path, 'rb') as fp:

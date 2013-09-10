@@ -1,0 +1,7 @@
+!contents -R2 -g -p -f -h
+
+!|script|RemoteClassFixture|
+|given server started at port|8000|
+|create remote class|PowFixture|with argument|3|
+|check|remote pow|2|9|
+|shutdown server|

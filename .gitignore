@@ -2,3 +2,4 @@
 build
 venv*
 roc.egg-info
+tests/fitnesse*

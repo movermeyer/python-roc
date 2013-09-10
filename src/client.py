@@ -12,3 +12,6 @@ def create_remote(host='127.0.0.1', port=8000):
         allow_none=True
     )
     return connection, lambda name: RemoteClass(connection, name)
+
+if __package__ is None:
+    __package__ = "roc.client"
