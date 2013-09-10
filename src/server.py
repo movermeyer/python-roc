@@ -36,7 +36,7 @@ class RocServer(object):
         self.server = SimpleXMLRPCServer(("127.0.0.1", port),
                                          allow_none=True,
                                          logRequests=logRequests)
-        self.available_classes = import_classes(package_path)
+        self.available_classes = load_classes(package_path)
         self.existing_instances = collections.defaultdict(lambda: [])
         self.server.register_introspection_functions()
         self.server.register_instance(self)
@@ -64,32 +64,49 @@ class RocServer(object):
         return instance_name
 
 
-def import_classes(package_path):
+def load_classes(package_path):
+    import os
+    classes = {}
+    if os.path.isfile(package_path):
+        classes.update(load_module(load_source(package_path)))
+    else:
+        for module in load_package(package_path):
+            classes.update(load_module(module))
+    return classes
+
+
+def load_source(source_path):
+    import os
+    import imp
+    name = os.path.splitext(os.path.basename(source_path))[0]
+    return imp.load_source(name, source_path)
+
+
+def load_package(package_path):
+    import os
+    import pkgutil
+    for loader, name, is_pkg in pkgutil.iter_modules([package_path]):
+        if is_pkg:
+            subpackage_path = os.path.join(package_path, name)
+            for module in load_package(subpackage_path):
+                yield module
+        else:
+            yield loader.find_module(name).load_module(name)
+
+
+def load_module(module):
     import inspect
     if six.PY2:
         isfunction = inspect.ismethod
     elif six.PY3:
         isfunction = inspect.isfunction
     classes = {}
-    for module in import_modules(package_path):
-        for class_name, Class in inspect.getmembers(module, inspect.isclass):
-            methods = [n
-                       for n, _ in inspect.getmembers(Class, isfunction)
-                       if '__' not in n]
-            classes[class_name] = {
-                'class': Class,
-                'methods': methods,
-            }
+    for class_name, Class in inspect.getmembers(module, inspect.isclass):
+        methods = [n
+                   for n, _ in inspect.getmembers(Class, isfunction)
+                   if '__' not in n]
+        classes[class_name] = {
+            'class': Class,
+            'methods': methods,
+        }
     return classes
-
-
-def import_modules(package_path):
-    import os
-    import pkgutil
-    for loader, name, is_pkg in pkgutil.walk_packages([package_path]):
-        if is_pkg:
-            subpackage_path = os.path.join(package_path, name)
-            for module in import_modules(subpackage_path):
-                yield module
-        else:
-            yield loader.find_module(name).load_module(name)
