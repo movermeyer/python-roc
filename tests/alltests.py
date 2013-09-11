@@ -9,6 +9,7 @@ import sanity_tests
 import client_tests
 import server_tests
 import complex_tests
+import waferslim.tests
 
 
 here = os.path.dirname(__file__)
@@ -20,12 +21,21 @@ def main():
         unittest.defaultTestLoader.loadTestsFromModule(client_tests),
         unittest.defaultTestLoader.loadTestsFromModule(server_tests),
         unittest.defaultTestLoader.loadTestsFromModule(complex_tests),
+        unittest.defaultTestLoader.loadTestsFromModule(waferslim.tests),
     ])
     result = unittest.TextTestRunner().run(suite)
     if result.wasSuccessful():
-        download_fitnesse()
-        return run_fitnesse()
+        if waferslim_smoke_test():
+            download_fitnesse()
+            return run_fitnesse()
     return 1
+
+
+def waferslim_smoke_test():
+    return 0 == subprocess.call([
+        'python',
+        'smoke.py',
+    ], cwd=os.path.join(os.path.dirname(__file__), 'waferslim'))
 
 
 def run_fitnesse():
