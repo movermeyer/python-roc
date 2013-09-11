@@ -14,7 +14,7 @@ import sanity_tests
 import client_tests
 import server_tests
 import complex_tests
-from waferslim import tests as waferslim_tests
+from waferslim.tests import tests as waferslim_tests
 
 
 def main():
@@ -37,9 +37,9 @@ def waferslim_smoke_test():
     smoke_env = dict(os.environ)
     smoke_env['PYTHONPATH'] = here
     return 0 == subprocess.call(
-        ['python', '-m', 'waferslim.smoke'],
+        ['python', os.path.join('waferslim', 'tests', 'smoke.py')],
         env=smoke_env,
-        cwd=os.path.join(here, 'waferslim')
+        cwd=here,
     )
 
 
