@@ -1,4 +1,4 @@
 !contents -R2 -g -p -f -h
 !define TEST_SYSTEM {slim}
-!define COMMAND_PATTERN {python waferslim/server.py --verbose --syspath=%p --logconf=waferslim/logging.conf -p }
+!define COMMAND_PATTERN {python -m waferslim --verbose --syspath=%p --logconf=waferslim/logging.conf -p }
 !path .

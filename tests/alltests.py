@@ -9,7 +9,7 @@ import sanity_tests
 import client_tests
 import server_tests
 import complex_tests
-import waferslim.tests
+from waferslim import tests as waferslim_tests
 
 
 here = os.path.dirname(__file__)
@@ -21,7 +21,7 @@ def main():
         unittest.defaultTestLoader.loadTestsFromModule(client_tests),
         unittest.defaultTestLoader.loadTestsFromModule(server_tests),
         unittest.defaultTestLoader.loadTestsFromModule(complex_tests),
-        unittest.defaultTestLoader.loadTestsFromModule(waferslim.tests),
+        unittest.defaultTestLoader.loadTestsFromModule(waferslim_tests),
     ])
     result = unittest.TextTestRunner().run(suite)
     if result.wasSuccessful():
