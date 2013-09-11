@@ -1,13 +1,6 @@
 import unittest
 import test_data.pow_fixture
-try:
-    from remote_class import RemoteClass
-except ImportError:
-    import os
-    import sys
-    sys.path.append('src')
-    sys.path.append(os.path.join('..', 'src'))
-    from remote_class import RemoteClass
+from roc.remote_class import RemoteClass
 
 
 class RemoteClassTestCase(unittest.TestCase):

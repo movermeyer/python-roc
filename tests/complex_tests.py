@@ -8,14 +8,8 @@ if six.PY2:
     from xmlrpclib import ServerProxy
 elif six.PY3:
     from xmlrpc.client import ServerProxy
-try:
-    from remote_class import RemoteClass
-except ImportError:
-    import sys
-    sys.path.append('src')
-    sys.path.append(os.path.join('..', 'src'))
-    from remote_class import RemoteClass
-from server import start_server
+from roc.remote_class import RemoteClass
+from roc.server import start_server
 
 
 TEST_DATA = os.path.dirname(test_data.__file__)

@@ -5,14 +5,16 @@ import hashlib
 import unittest
 import subprocess
 from six.moves.urllib import request
+
+# Last magic resort for running tests without ENV manipulations
+here = os.path.abspath(os.path.dirname(__file__))
+sys.path.insert(0, os.path.join(here, '..'))
+
 import sanity_tests
 import client_tests
 import server_tests
 import complex_tests
 from waferslim import tests as waferslim_tests
-
-
-here = os.path.abspath(os.path.dirname(__file__))
 
 
 def main():
@@ -58,12 +60,14 @@ def run_fitnesse():
                         os.path.join(here, 'FitNesseRoot', suite_name))
     except OSError:
         pass
-    return subprocess.call([
-        'java',
-        '-jar',
-        'fitnesse-standalone.jar',
-        '-c', suite_name + '?suite&format=text',
-    ], cwd=here)
+    fitnesse_env = dict(os.environ)
+    fitnesse_env['PYTHONPATH'] = os.path.join(here, '..')
+    return subprocess.call(
+        ['java', '-jar', 'fitnesse-standalone.jar',
+         '-c', suite_name + '?suite&format=text'],
+        env=fitnesse_env,
+        cwd=here,
+    )
 
 
 def download_fitnesse():

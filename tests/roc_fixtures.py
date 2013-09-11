@@ -1,9 +1,6 @@
 import os
-import sys
-sys.path.insert(0, os.path.dirname(__file__))
 import test_data
-sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..'))
-from src import create_remote, start_server
+from roc import create_remote, start_server
 
 
 TEST_DATA = os.path.dirname(test_data.__file__)
