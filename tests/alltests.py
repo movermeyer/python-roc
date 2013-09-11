@@ -12,7 +12,7 @@ import complex_tests
 from waferslim import tests as waferslim_tests
 
 
-here = os.path.dirname(__file__)
+here = os.path.abspath(os.path.dirname(__file__))
 
 
 def main():
@@ -35,7 +35,7 @@ def waferslim_smoke_test():
     return 0 == subprocess.call([
         'python',
         'smoke.py',
-    ], cwd=os.path.join(os.path.dirname(__file__), 'waferslim'))
+    ], cwd=os.path.join(here, 'waferslim'))
 
 
 def run_fitnesse():
@@ -49,15 +49,18 @@ def run_fitnesse():
         '-jar',
         'fitnesse-standalone.jar',
         '-i',
-    ], cwd=os.path.dirname(__file__))
+    ], cwd=here)
     try:
         shutil.copytree(os.path.join(here, suite_name),
                         os.path.join(here, 'FitNesseRoot', suite_name))
     except OSError:
         pass
-    return subprocess.call(['java', '-jar', 'fitnesse-standalone.jar',
-                           '-c', 'RocSuite?suite&format=text'],
-                           cwd=here)
+    return subprocess.call([
+        'java',
+        '-jar',
+        'fitnesse-standalone.jar',
+        '-c', suite_name + '?suite&format=text',
+    ], cwd=here)
 
 
 def download_fitnesse():
