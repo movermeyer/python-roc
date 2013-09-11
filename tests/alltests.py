@@ -32,10 +32,13 @@ def main():
 
 
 def waferslim_smoke_test():
-    return 0 == subprocess.call([
-        'python',
-        'smoke.py',
-    ], cwd=os.path.join(here, 'waferslim'))
+    smoke_env = dict(os.environ)
+    smoke_env['PYTHONPATH'] = here
+    return 0 == subprocess.call(
+        ['python', '-m', 'waferslim.smoke'],
+        env=smoke_env,
+        cwd=os.path.join(here, 'waferslim')
+    )
 
 
 def run_fitnesse():
