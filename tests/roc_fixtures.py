@@ -1,10 +1,9 @@
 import os
 import sys
 sys.path.insert(0, os.path.dirname(__file__))
-sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..'))
 import test_data
-from src import client
-from src import server
+sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..'))
+from src import create_remote, start_server
 
 
 TEST_DATA = os.path.dirname(test_data.__file__)
@@ -19,8 +18,8 @@ class RemoteClassFixture(object):
 
     def givenServerStartedAtPort(self, port):
         self.port = int(port)
-        self.server_thread = server.start_server(TEST_DATA, port=self.port)
-        self.connection, self.remote = client.create_remote(port=self.port)
+        self.server_thread = start_server(TEST_DATA, port=self.port)
+        self.connection, self.remote = create_remote(port=self.port)
 
     def createRemoteClassWithArgument(self, classname, arg1):
         Class = self.remote(classname)
