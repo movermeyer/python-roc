@@ -16,3 +16,7 @@ class RemoteClass(object):
 
     def __getattr__(self, name):
         return getattr(self.remote_instance, name)
+
+
+def bound_remote_class(connection):
+    return lambda name: RemoteClass(connection, name)

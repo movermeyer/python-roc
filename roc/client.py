@@ -1,5 +1,6 @@
 import six
-from .remote_class import RemoteClass
+import collections
+from .remote_class import bound_remote_class
 from .loader import load_classes
 
 
@@ -12,10 +13,12 @@ def create_remote(host='127.0.0.1', port=8000):
         "http://%s:%d/" % (host, port),
         allow_none=True
     )
-    return connection, lambda name: RemoteClass(connection, name)
+    return connection, bound_remote_class(connection)
 
 
-def import_remote(package, host='127.0.0.1', port=8000):
-    con, remote = create_remote(host, port)
-    for class_name, data in load_classes(package):
-        yield (class_name, data['class'])
+def import_remote(package, bound_remote):
+    classes = [(class_name, bound_remote(data['class']))
+               for class_name, data in load_classes(package)]
+    RemoteModule = collections.namedtuple('RemoteModule',
+                                          [n for (n, _) in classes])
+    return RemoteModule(*[c for (_, c) in classes])
