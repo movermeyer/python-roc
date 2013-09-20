@@ -17,7 +17,7 @@ def create_remote(host='127.0.0.1', port=8000):
 
 
 def import_remote(package, bound_remote):
-    classes = [(class_name, bound_remote(data['class']))
+    classes = [(class_name, bound_remote(class_name))
                for class_name, data in load_classes(package)]
     RemoteModule = collections.namedtuple('RemoteModule',
                                           [n for (n, _) in classes])
