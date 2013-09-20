@@ -35,7 +35,7 @@ def create_server(package_path, port=8000, logRequests=True):
 
 class RocServer(object):
     def __init__(self, package_path, port, logRequests=True):
-        self.server = SimpleXMLRPCServer(("127.0.0.1", port),
+        self.server = SimpleXMLRPCServer(("0.0.0.0", port),
                                          allow_none=True,
                                          logRequests=logRequests)
         self.available_classes = dict(load_classes(package_path))
