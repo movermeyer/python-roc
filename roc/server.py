@@ -15,7 +15,7 @@ def start_server(package_path, port=8000, log_requests=True):
     server = create_server(
         package_path,
         port=port,
-        logRequests=log_requests,
+        log_requests=log_requests,
     )
 
     def serve_forever_or_die_trying():
@@ -29,15 +29,18 @@ def start_server(package_path, port=8000, log_requests=True):
     return thread
 
 
-def create_server(package_path, port=8000, logRequests=True):
-    return RocServer(package_path, port, logRequests).server
+def create_server(package_path, port=8000, log_requests=True):
+    roc_server = RocServer(package_path, port, log_requests)
+    if log_requests:
+        print('Available class(es): ' + (', '.join(roc_server.classes())))
+    return roc_server.server
 
 
 class RocServer(object):
-    def __init__(self, package_path, port, logRequests=True):
+    def __init__(self, package_path, port, log_requests=True):
         self.server = SimpleXMLRPCServer(("0.0.0.0", port),
                                          allow_none=True,
-                                         logRequests=logRequests)
+                                         logRequests=log_requests)
         self.available_classes = dict(load_classes(package_path))
         self.existing_instances = collections.defaultdict(lambda: [])
         self.server.register_introspection_functions()
