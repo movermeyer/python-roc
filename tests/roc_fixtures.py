@@ -28,3 +28,11 @@ class RemoteClassFixture(object):
     def shutdownServer(self):
         self.connection.shutdown()
         self.server_thread.join()
+
+
+if __name__ == '__main__':
+    rcf = RemoteClassFixture()
+    rcf.givenServerStartedAtPort('3333')
+    rcf.createRemoteClassWithArgument('PowFixture', '3')
+    print(rcf.remotePow('2') == '9')
+    rcf.shutdownServer()
