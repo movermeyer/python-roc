@@ -1,7 +1,6 @@
 import os
 import random
 import unittest
-import six
 import test_data
 import test_data.pow_fixture
 from roc.client import server_proxy, remote_module

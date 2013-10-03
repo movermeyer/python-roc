@@ -1,11 +1,11 @@
+import sys
 import itertools
 import collections
 import threading
-import six
 
-if six.PY2:
+if sys.version_info[0] == 2:
     from SimpleXMLRPCServer import SimpleXMLRPCServer
-elif six.PY3:
+elif sys.version_info[0] == 3:
     from xmlrpc.server import SimpleXMLRPCServer
 
 from .loader import load_classes
