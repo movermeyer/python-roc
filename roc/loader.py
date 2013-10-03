@@ -1,8 +1,8 @@
 import os
+import sys
 import imp
 import pkgutil
 import inspect
-import six
 
 
 def load_classes(package_path):
@@ -31,9 +31,9 @@ def load_package(package_path):
 
 
 def get_classes(module):
-    if six.PY2:
+    if sys.version_info[0] == 2:
         isfunction = inspect.ismethod
-    elif six.PY3:
+    elif sys.version_info[0] == 3:
         isfunction = inspect.isfunction
     for class_name, Class in inspect.getmembers(module, inspect.isclass):
         methods = [n
