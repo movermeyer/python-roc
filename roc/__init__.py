@@ -1,10 +1,14 @@
 from .server import start_server, create_server
-from .remote import RemoteClass
-from .client import create_remote
+from .client import server_proxy, remote_module
 from .cli import main
 
 
-__all__ = (start_server, create_server, RemoteClass, create_remote)
+__all__ = (
+    start_server,
+    create_server,
+    server_proxy,
+    remote_module,
+)
 
 
 if __name__ == '__main__':

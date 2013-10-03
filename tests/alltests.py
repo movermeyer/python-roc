@@ -14,12 +14,14 @@ import sanity_tests
 import client_tests
 import server_tests
 import complex_tests
+import remote_tests
 from waferslim.tests import tests as waferslim_tests
 
 
 def main():
     suite = unittest.TestSuite([
         unittest.defaultTestLoader.loadTestsFromModule(sanity_tests),
+        unittest.defaultTestLoader.loadTestsFromModule(remote_tests),
         unittest.defaultTestLoader.loadTestsFromModule(client_tests),
         unittest.defaultTestLoader.loadTestsFromModule(server_tests),
         unittest.defaultTestLoader.loadTestsFromModule(complex_tests),

@@ -1,22 +1,11 @@
-class RemoteClass(object):
-    def __init__(self, server, class_name):
-        self.server = server
-        self.class_name = class_name
-
-    def __call__(self, *args):
-        instance_name = self.server.create(
-            self.class_name,
-            args
-        )
-        self.remote_instance = getattr(
-            self.server,
-            instance_name
-        )
-        return self
-
-    def __getattr__(self, name):
-        return getattr(self.remote_instance, name)
-
-
-def bound_remote_class(connection):
-    return lambda name: RemoteClass(connection, name)
+class RemoteModule(object):
+    def __init__(self, proxy):
+        self.proxy = proxy
+        for class_name in self.proxy.classes():
+            def meta_hack(local_class_name):
+                def creator(*args):
+                    instance_name = self.proxy.create(local_class_name, args)
+                    remote_instance = getattr(self.proxy, instance_name)
+                    return remote_instance
+                return creator
+            setattr(self, class_name, meta_hack(class_name))

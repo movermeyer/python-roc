@@ -4,11 +4,7 @@ import unittest
 import six
 import test_data
 import test_data.pow_fixture
-if six.PY2:
-    from xmlrpclib import ServerProxy
-elif six.PY3:
-    from xmlrpc.client import ServerProxy
-from roc.remote import RemoteClass
+from roc.client import server_proxy, remote_module
 from roc.server import start_server
 
 
@@ -23,10 +19,7 @@ class RealServerTestCase(unittest.TestCase):
             port=port,
             log_requests=False
         )
-        self.proxy = ServerProxy(
-            "http://127.0.0.1:%d/" % (port),
-            allow_none=True
-        )
+        self.proxy = server_proxy(port=port)
 
     def test_whats_registered(self):
         must_be_provided = ('classes', 'create', 'instances', 'shutdown')
@@ -41,8 +34,14 @@ class RealServerTestCase(unittest.TestCase):
         self.assertFalse(provided_0 == provided_1,
                          ".create() does not add new methods to server")
 
+    def test_remote_module_has_defined_classes(self):
+        rmodule = remote_module(self.proxy)
+        self.assertTrue(hasattr(rmodule, 'PowFixture'))
+        self.assertTrue(hasattr(rmodule, 'DivFixture'))
+        self.assertFalse(hasattr(rmodule, 'NonExisting'))
+
     def test_remote_class_with_real_server(self):
-        PowFixture = RemoteClass(self.proxy, 'PowFixture')
+        PowFixture = remote_module(self.proxy).PowFixture
         pow_3 = PowFixture(3)
         nine = pow_3.pow(2)
         self.assertEqual(nine, 9)
