@@ -1,6 +1,6 @@
 import unittest
 import test_data.pow_fixture
-from roc.remote_class import RemoteClass, bound_remote_class
+from roc.remote import RemoteClass, bound_remote_class
 from roc.client import import_remote
 
 

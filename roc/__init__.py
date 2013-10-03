@@ -1,5 +1,5 @@
 from .server import start_server, create_server
-from .remote_class import RemoteClass
+from .remote import RemoteClass
 from .client import create_remote
 from .cli import main
 

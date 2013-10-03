@@ -8,7 +8,7 @@ if six.PY2:
     from xmlrpclib import ServerProxy
 elif six.PY3:
     from xmlrpc.client import ServerProxy
-from roc.remote_class import RemoteClass
+from roc.remote import RemoteClass
 from roc.server import start_server
 
 
