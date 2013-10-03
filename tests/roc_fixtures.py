@@ -1,6 +1,6 @@
 import os
 import test_data
-from roc import create_remote, start_server
+from roc import start_server, server_proxy, remote_module
 
 
 TEST_DATA = os.path.dirname(test_data.__file__)
@@ -8,25 +8,26 @@ TEST_DATA = os.path.dirname(test_data.__file__)
 
 class RemoteClassFixture(object):
     def __init__(self):
-        self.connection = None
-        self.remote = None
+        self.proxy = None
+        self.remote_module = None
         self.port = None
         self.instance = None
 
     def givenServerStartedAtPort(self, port):
         self.port = int(port)
         self.server_thread = start_server(TEST_DATA, port=self.port)
-        self.connection, self.remote = create_remote(port=self.port)
+        self.proxy = server_proxy(port=self.port)
+        self.remote_module = remote_module(self.proxy)
 
     def createRemoteClassWithArgument(self, classname, arg1):
-        Class = self.remote(classname)
+        Class = getattr(self.remote_module, classname)
         self.instance = Class(int(arg1))
 
     def remotePow(self, power):
         return str(self.instance.pow(int(power)))
 
     def shutdownServer(self):
-        self.connection.shutdown()
+        self.proxy.shutdown()
         self.server_thread.join()
 
 
