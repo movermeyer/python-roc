@@ -9,4 +9,6 @@ install:
   - git submodule update --init --recursive
   - pip install setuptools six
 # command to run tests
-script: python tests/alltests.py
+script:
+  - python tests/alltests.py
+  - "python setup.py sdist && cd dist && easy_install `ls | grep roc*`"
