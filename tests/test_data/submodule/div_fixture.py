@@ -4,3 +4,7 @@ class DivFixture(object):
 
     def div(self, dividend):
         return self.divisor / dividend
+
+    @staticmethod
+    def random_number():
+        return 4

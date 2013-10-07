@@ -23,8 +23,8 @@ class InspectionTestCase(unittest.TestCase):
         classes = dict(load_classes(TEST_DATA))
         self.assertEqual(classes['PowFixture']['methods'],
                          ['pow'])
-        self.assertEqual(classes['DivFixture']['methods'],
-                         ['div'])
+        self.assertEqual(sorted(classes['DivFixture']['methods']),
+                         ['div', 'random_number'])
 
 
 if __name__ == '__main__':

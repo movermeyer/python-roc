@@ -1,8 +1,6 @@
 import os
-import sys
 import imp
 import pkgutil
-import inspect
 
 
 def load_classes(package_path):
@@ -31,12 +29,9 @@ def load_package(package_path):
 
 
 def get_classes(module):
-    if sys.version_info[0] == 2:
-        isfunction = inspect.ismethod
-    elif sys.version_info[0] == 3:
-        isfunction = inspect.isfunction
+    import inspect
     for class_name, Class in inspect.getmembers(module, inspect.isclass):
         methods = [n
-                   for n, _ in inspect.getmembers(Class, isfunction)
+                   for n, _ in inspect.getmembers(Class, inspect.isroutine)
                    if '__' not in n]
         yield class_name, {'class': Class, 'methods': methods}
