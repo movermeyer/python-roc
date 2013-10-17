@@ -82,8 +82,8 @@ def run_fitnesse():
         )
         for file_path in glob.glob(pattern):
             with open(file_path, 'rb') as fp:
-                print '==== Contents of %s ====' % (file_path)
-                print fp.read()
+                print('==== Contents of %s ====' % (file_path))
+                print(fp.read())
     return returncode
 
 
