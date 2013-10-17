@@ -32,7 +32,7 @@ def is_online(proxy):
         proxy.classes()
         return True
     except socket.error as e:
-        if e.errno in (10060, 10061):
+        if e.errno in (111, 10060, 10061):
             return False
         else:
             raise
