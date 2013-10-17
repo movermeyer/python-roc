@@ -1,11 +1,8 @@
 !|script|Remote class fixture|
 |given server started at port|3333|
 |ensure|server is online|
-|given server started at port|3333|
-|ensure|server is online|
-|reject|shutdown server|
-|ensure|server is online|
 |shutdown competitors|
+|reject|server is online|
 |given server started at port|3333|
 |ensure|server is online|
 |ensure|shutdown server|
