@@ -1,5 +1,6 @@
 import os
 import sys
+import glob
 import shutil
 import hashlib
 import unittest
@@ -64,12 +65,26 @@ def run_fitnesse():
         pass
     fitnesse_env = dict(os.environ)
     fitnesse_env['PYTHONPATH'] = os.path.join(here, '..')
-    return subprocess.call(
+    returncode = subprocess.call(
         ['java', '-jar', 'fitnesse-standalone.jar',
          '-c', suite_name + '?suite&format=text'],
         env=fitnesse_env,
         cwd=here,
     )
+    if returncode != 0:
+        pattern = os.path.join(
+            here,
+            'FitNesseRoot',
+            'files',
+            'testResults',
+            '*',
+            '*.xml'
+        )
+        for file_path in glob.glob(pattern):
+            with open(file_path, 'rb') as fp:
+                print '==== Contents of %s ====' % (file_path)
+                print fp.read()
+    return returncode
 
 
 def download_fitnesse():
