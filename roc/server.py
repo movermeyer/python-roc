@@ -29,6 +29,13 @@ def start_server(package_path, port=8000, log_requests=True):
     return thread
 
 
+def shutdown_competitors(port=8000):
+    from .client import server_proxy, is_online
+    proxy = server_proxy(host='127.0.0.1', port=port)
+    while is_online(proxy):
+        proxy.shutdown()
+
+
 def create_server(package_path, port=8000, log_requests=True):
     roc_server = RocServer(package_path, port, log_requests)
     if log_requests:

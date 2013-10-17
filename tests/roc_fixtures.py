@@ -1,6 +1,7 @@
 import os
 import test_data
-from roc import start_server, server_proxy, remote_module
+from roc import start_server, server_proxy, remote_module, is_online
+from roc.server import shutdown_competitors
 
 
 TEST_DATA = os.path.dirname(test_data.__file__)
@@ -19,6 +20,12 @@ class RemoteClassFixture(object):
         self.proxy = server_proxy(port=self.port)
         self.remote_module = remote_module(self.proxy)
 
+    def shutdown_competitors(self):
+        shutdown_competitors(self.port)
+
+    def server_is_online(self):
+        return is_online(self.proxy)
+
     def createRemoteClassWithArgument(self, classname, arg1):
         Class = getattr(self.remote_module, classname)
         self.instance = Class(int(arg1))
@@ -28,7 +35,8 @@ class RemoteClassFixture(object):
 
     def shutdownServer(self):
         self.proxy.shutdown()
-        self.server_thread.join()
+        self.server_thread.join(5.0)
+        return not self.server_thread.isAlive()
 
 
 if __name__ == '__main__':
