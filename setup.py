@@ -33,7 +33,7 @@ setup(
     ],
 
     # What actually matters
-    version='0.3.2',
+    version='0.3.3',
     packages=['roc'],
     package_dir={'roc': 'roc'},
     include_package_data=True,
