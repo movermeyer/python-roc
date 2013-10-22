@@ -18,7 +18,7 @@ def main():
     if options.port is not None:
         port = int(options.port)
         if options.egoist:
-            shutdown_competitors()
+            shutdown_competitors(port)
         server = create_server(options.module, port, options.verbose)
         if options.verbose:
             print("Listening on port %d..." % (port))
