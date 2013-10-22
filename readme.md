@@ -2,7 +2,7 @@ ROC - Remote Object Call
 ========================
 
 [![Build Status](https://travis-ci.org/peterdemin/python-roc.png?branch=master)](https://travis-ci.org/peterdemin/python-roc)
-[![PyPi version](https://pypip.in/v/roc/badge.png)](https://crate.io/packages/$REPO/)
+[![PyPi version](https://pypip.in/v/roc/badge.png)](https://crate.io/packages/roc/)
 
 
 ROC is RPC enhancment allowing to manipulate
