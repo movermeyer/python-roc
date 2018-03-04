@@ -2,7 +2,7 @@ ROC - Remote Object Call
 ========================
 
 [![Build Status](https://travis-ci.org/peterdemin/python-roc.png?branch=master)](https://travis-ci.org/peterdemin/python-roc)
-[![PyPi version](https://pypip.in/v/roc/badge.png)](https://crate.io/packages/roc/)
+[![PyPi version](https://img.shields.io/pypi/v/roc.svg)](https://crate.io/packages/roc/)
 
 ROC is thin wrapper around SimpleXMLRPCServer allowing to manipulate remote objects like they are local.
 
